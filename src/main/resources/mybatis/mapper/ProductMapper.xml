@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.study.practicemall.mapper.ProductMapper">
+    <insert id="saveProductInfo" parameterType="com.study.practicemall.dao.ProductDAO">
+        INSERT INTO PRODUCT (product_code, product_name, product_price, product_coment, create_date, update_date)
+        VALUES (#{productCode},#{productName}, #{productPrice}, #{productComent}, now(), now())
+    </insert>
+
+</mapper>
