@@ -1,16 +1,22 @@
 package com.study.practicemall.dto.request;
 
-import jakarta.validation.constraints.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
+/*
+ * 예외처리하는 핸들러를 따로 만들기 exception handler
+ * */
 @Getter
 @Setter
 @Builder
 public class ProductRequestDTO {
 
-    @NotBlank(message = "상품코드는 필수 값입니다.")
+    @NotEmpty(message = "상품코드는 필수 값입니다.")
     private String productCode;
 
     @NotBlank(message = "상품이름은 필수 입력 값입니다.")
@@ -22,8 +28,5 @@ public class ProductRequestDTO {
 
     @NotBlank(message = "상품이름은 필수 입력 값입니다.")
     private String productComment;
-
-
-
 
 }
