@@ -8,9 +8,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
-/*
- * 예외처리하는 핸들러를 따로 만들기 exception handler
- * */
 @Getter
 @Setter
 @Builder

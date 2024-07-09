@@ -8,8 +8,6 @@ import lombok.Setter;
 @Setter
 @Builder
 public class ProductResponseDTO {
-
-    private String message;
     private long productId;
     private String productCode;
     private String productName;
