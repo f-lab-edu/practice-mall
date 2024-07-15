@@ -13,7 +13,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.dao.DuplicateKeyException;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 /*
@@ -36,14 +35,9 @@ public class ProductServiceTest {
 
     @BeforeEach
     void init() {
-        productRequestDTO = ProductRequestDTO.builder().productCode("123456789").productName("나이키덩크").productPrice(119000).productComment("이상품은 운동화입니다.").build();
+        productRequestDTO = ProductRequestDTO.builder().productCode("5555").productName("나이키덩크").productPrice(119000).productComment("이상품은 운동화입니다.").build();
     }
-
-    public ProductDAO productDAO(ProductRequestDTO productRequestDTO) {
-        productDAO = ProductDAO.builder().productCode(productRequestDTO.getProductCode()).productName(productRequestDTO.getProductName()).productPrice(productRequestDTO.getProductPrice()).productComment(productRequestDTO.getProductComment()).build();
-        return productDAO;
-    }
-
+    
     /*
      * verify : mock 객체에 대해 원하는 메소드가 특정 조건에 의해 발생했는지 확인한다.
      * times : 지정된 수로 호출이 되어야한다.
@@ -52,7 +46,13 @@ public class ProductServiceTest {
     @Test
     @DisplayName("상품등록 : 성공")
     void addProduct() {
+        // 상품이 중복되는지 확인한다.
+        when(productMapper.searchProduct(productRequestDTO.getProductCode())).thenReturn(0);
+        // 상품이 정상적으로 등록되는지 확인한다.
+        when(productMapper.registerProduct(any())).thenReturn(1);
+
         productService.registerProduct(productRequestDTO);
+        verify(productMapper, times(1)).searchProduct(productRequestDTO.getProductCode());
         verify(productMapper, times(1)).registerProduct(any());
     }
 
