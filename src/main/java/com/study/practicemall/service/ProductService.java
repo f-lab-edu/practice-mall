@@ -17,11 +17,14 @@ public class ProductService {
 
     public void registerProduct(ProductRequestDTO productRequestDTO) {
         int existenceProduct = productMapper.searchProduct(productRequestDTO.getProductCode());
-        if (existenceProduct > 0)
+        if (existenceProduct > 0) {
             throw new DuplicateKeyException("이미 등록된 상품입니다.");
+        }
         ProductDAO product = ProductDAO.builder().productCode(productRequestDTO.getProductCode()).productName(productRequestDTO.getProductName()).productPrice(productRequestDTO.getProductPrice()).productComment(productRequestDTO.getProductComment()).build();
-        ProductDAO addProduct = productMapper.registerProduct(product);
-        if (addProduct == null) {
+        System.out.print(product.getProductCode());
+        int getResult = productMapper.registerProduct(product);
+        System.out.println(getResult);
+        if (getResult == 0) {
             throw new RuntimeException("상품등록에 실패했습니다.");
         }
     }
