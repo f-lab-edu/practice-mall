@@ -23,7 +23,7 @@ public class ProductRequestDTO {
     @Positive(message = "상품 가격은 0이상의 값만 입력 가능합니다.")
     private int productPrice;
 
-    @NotBlank(message = "상품이름은 필수 입력 값입니다.")
+    @NotBlank(message = "상품설명은 필수 입력 값입니다.")
     private String productComment;
 
 }
