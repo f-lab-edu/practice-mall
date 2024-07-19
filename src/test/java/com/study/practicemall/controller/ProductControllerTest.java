@@ -14,7 +14,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /*
@@ -62,7 +61,7 @@ public class ProductControllerTest {
     @Test
     @DisplayName("상품등록 : 성공")
     void addProduct() throws Exception {
-        mockMvc.perform(post("/product").contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(productRequestDTO))).andExpect(status().isCreated()).andDo(print());
+        mockMvc.perform(post("/product").contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(productRequestDTO))).andExpect(status().isCreated());
     }
 
     /**
@@ -81,7 +80,7 @@ public class ProductControllerTest {
          * */
         ResultActions resultActions = mockMvc.perform(post("/product").contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(productRequestDTO)));
         //then
-        resultActions.andExpect(status().isBadRequest()).andDo(print());
+        resultActions.andExpect(status().isBadRequest());
 
     }
 
@@ -93,7 +92,7 @@ public class ProductControllerTest {
         //when
         ResultActions resultActions = mockMvc.perform(post("/product").contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(productRequestDTO)));
         //then
-        resultActions.andExpect(status().isBadRequest()).andDo(print());
+        resultActions.andExpect(status().isBadRequest());
 
     }
 
@@ -105,7 +104,7 @@ public class ProductControllerTest {
         //when
         ResultActions resultActions = mockMvc.perform(post("/product").contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(productRequestDTO)));
         //then
-        resultActions.andExpect(status().isBadRequest()).andDo(print());
+        resultActions.andExpect(status().isBadRequest());
 
     }
 
@@ -117,7 +116,7 @@ public class ProductControllerTest {
         //when
         ResultActions resultActions = mockMvc.perform(post("/product").contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(productRequestDTO)));
         //then
-        resultActions.andExpect(status().isBadRequest()).andDo(print());
+        resultActions.andExpect(status().isBadRequest());
 
     }
 
