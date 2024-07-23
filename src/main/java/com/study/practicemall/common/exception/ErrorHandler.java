@@ -17,25 +17,16 @@ public class ErrorHandler {
      * */
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public String methodArgumentNotValidException(MethodArgumentNotValidException e) {
+    public ErrorResponse methodArgumentNotValidException(MethodArgumentNotValidException e) {
         //return new ErrorResponse(400, e.getFieldError().getDefaultMessage());
-        return e.getFieldError().getDefaultMessage();
+        return new ErrorResponse(400, e.getFieldError().getDefaultMessage());
     }
 
     /**
      * 데이터 중복에 대한 Exception
      */
-    @ExceptionHandler(DuplicateCheckException.class)
-    public ErrorResponse duplicateCheckException(DuplicateCheckException e) {
+    @ExceptionHandler(CommonCustomException.class)
+    public ErrorResponse duplicateCheckException(CommonCustomException e) {
         return new ErrorResponse(e.getErrorCode().getStatusCode(), e.getErrorCode().getMessage());
     }
-
-    /**
-     * DB 문제에 대한 Exception
-     */
-    @ExceptionHandler(DataAccessCheckException.class)
-    public ErrorResponse dataException(DataAccessCheckException e) {
-        return new ErrorResponse(e.getErrorCode().getStatusCode(), e.getErrorCode().getMessage());
-    }
-
 }

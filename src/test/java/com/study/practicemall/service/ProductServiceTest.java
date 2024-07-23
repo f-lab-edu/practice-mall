@@ -37,7 +37,7 @@ public class ProductServiceTest {
     void init() {
         productRequestDTO = ProductRequestDTO.builder().productCode("5555").productName("나이키덩크").productPrice(119000).productComment("이상품은 운동화입니다.").build();
     }
-    
+
     /*
      * verify : mock 객체에 대해 원하는 메소드가 특정 조건에 의해 발생했는지 확인한다.
      * times : 지정된 수로 호출이 되어야한다.
@@ -47,12 +47,12 @@ public class ProductServiceTest {
     @DisplayName("상품등록 : 성공")
     void addProduct() {
         // 상품이 중복되는지 확인한다.
-        when(productMapper.searchProduct(productRequestDTO.getProductCode())).thenReturn(0);
+        when(productMapper.countOfProduct(productRequestDTO.getProductCode())).thenReturn(0);
         // 상품이 정상적으로 등록되는지 확인한다.
         when(productMapper.registerProduct(any())).thenReturn(1);
 
         productService.registerProduct(productRequestDTO);
-        verify(productMapper, times(1)).searchProduct(productRequestDTO.getProductCode());
+        verify(productMapper, times(1)).countOfProduct(productRequestDTO.getProductCode());
         verify(productMapper, times(1)).registerProduct(any());
     }
 
@@ -65,8 +65,8 @@ public class ProductServiceTest {
     @Test
     @DisplayName("상품등록 : 이미 상품이 등록되어있을 경우")
     void duplicationProduct() {
-        when(productMapper.searchProduct(productRequestDTO.getProductCode())).thenThrow(new DuplicateKeyException("이미 등록된 상품입니다."));
-        assertThrows(DuplicateKeyException.class, () -> productMapper.searchProduct(productRequestDTO.getProductCode()));
+        when(productMapper.countOfProduct(productRequestDTO.getProductCode())).thenThrow(new DuplicateKeyException("이미 등록된 상품입니다."));
+        assertThrows(DuplicateKeyException.class, () -> productMapper.countOfProduct(productRequestDTO.getProductCode()));
     }
 
     /**

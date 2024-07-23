@@ -1,0 +1,6 @@
+logging:
+  pattern:
+    console: "[%d{yyyy-MM-dd HH:mm:ss.SSS}][%clr(%-5level){red}][%logger.%method:line%line] - %msg%n"
+    level:
+      org:
+        com.study.practicemall: INFO

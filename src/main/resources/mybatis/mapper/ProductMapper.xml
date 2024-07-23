@@ -6,7 +6,7 @@
         insert into PRODUCT (product_code, product_name, product_price, product_comment, create_date, update_date)
         values (#{productCode}, #{productName}, #{productPrice}, #{productComment}, now(), now())
     </insert>
-    <select id="searchProduct" parameterType="java.lang.String" resultType="int">
+    <select id="countOfProduct" parameterType="java.lang.String" resultType="int">
         select count(*)
         from PRODUCT
         where product_code = #{productCode}

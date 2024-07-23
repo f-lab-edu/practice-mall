@@ -1,7 +1,6 @@
 package com.study.practicemall.service;
 
-import com.study.practicemall.common.exception.DataAccessCheckException;
-import com.study.practicemall.common.exception.DuplicateCheckException;
+import com.study.practicemall.common.exception.CommonCustomException;
 import com.study.practicemall.common.exception.ErrorCode;
 import com.study.practicemall.dao.ProductDAO;
 import com.study.practicemall.dto.request.ProductRequestDTO;
@@ -20,15 +19,17 @@ public class ProductService {
     private final ProductMapper productMapper;
 
     public void registerProduct(ProductRequestDTO productRequestDTO) {
-        int existenceProduct = productMapper.searchProduct(productRequestDTO.getProductCode());
+        int existenceProduct = productMapper.countOfProduct(productRequestDTO.getProductCode());
         if (existenceProduct > 0) {
-            throw new DuplicateCheckException(ErrorCode.PRODUCT_DUPLICATED);
+            log.error("duplicate failed");
+            throw new CommonCustomException(ErrorCode.PRODUCT_DUPLICATED);
         }
-        ProductDAO product = ProductDAO.builder().productCode(productRequestDTO.getProductCode()).productName(productRequestDTO.getProductName()).productPrice(productRequestDTO.getProductPrice()).productComment(productRequestDTO.getProductComment()).build();
-        int getResult = productMapper.registerProduct(product);
-        if (getResult == 0) {
-            log.error(getResult + "등록횟수로 상품등록에 실패했습니다.");
-            throw new DataAccessCheckException(ErrorCode.NOT_REGISTER);
+        try {
+            ProductDAO product = ProductDAO.builder().productCode(productRequestDTO.getProductCode()).productName(productRequestDTO.getProductName()).productPrice(productRequestDTO.getProductPrice()).productComment(productRequestDTO.getProductComment()).build();
+            productMapper.registerProduct(product);
+        } catch (Exception e) {
+            log.error("processing failed");
+            throw new CommonCustomException(ErrorCode.NOT_REGISTER);
         }
     }
 }

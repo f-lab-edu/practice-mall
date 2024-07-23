@@ -7,5 +7,5 @@ import org.apache.ibatis.annotations.Mapper;
 public interface ProductMapper {
     int registerProduct(ProductDAO product);
 
-    int searchProduct(String productCode);
+    int countOfProduct(String productCode);
 }
