@@ -3,7 +3,6 @@ package com.study.practicemall.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.study.practicemall.dto.request.ProductRequestDTO;
 import com.study.practicemall.service.ProductService;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +12,10 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
+import static org.mockito.ArgumentMatchers.refEq;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /*
@@ -47,10 +49,6 @@ public class ProductControllerTest {
     private ProductService productService;
     private ProductRequestDTO productRequestDTO;
 
-    @BeforeEach
-    void init() {
-        productRequestDTO = ProductRequestDTO.builder().productCode("1234").productName("나이키덩크").productPrice(119000).productComment("이상품은 운동화입니다.").build();
-    }
 
     /*
      * perform() : 요청을 전송하는 역할
@@ -59,9 +57,16 @@ public class ProductControllerTest {
      *
      * */
     @Test
-    @DisplayName("상품등록 : 성공")
+    @DisplayName("상품 등록 성공")
     void addProduct() throws Exception {
+        //given
+        ProductRequestDTO productRequestDTO = ProductRequestDTO.builder().productCode("1234").productName("나이키덩크").productPrice(119000).productComment("이상품은 운동화입니다.").build();
+        //when
+        doNothing().when(productService).registerProduct(productRequestDTO);
         mockMvc.perform(post("/product").contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(productRequestDTO))).andExpect(status().isCreated());
+        //then
+        verify(productService, times(1)).registerProduct(refEq(productRequestDTO));
+
     }
 
     /**
@@ -70,7 +75,7 @@ public class ProductControllerTest {
      * then:원하던 응답형식인지 확인할때
      */
     @Test
-    @DisplayName("상품등록 : 상품코드 미등록")
+    @DisplayName("상품코드에 null 이나 공백이 들어가면 등록에 실패한다.")
     void productNotCode() throws Exception {
         //given
         ProductRequestDTO productRequestDTO = ProductRequestDTO.builder().productCode("").productName("나이키덩크").productPrice(119000).productComment("이 상품은 운동화입니다.").build();
@@ -78,45 +83,49 @@ public class ProductControllerTest {
         /*
          * ResultActions MockMvcResultMatchers 클래스에서 실행결과를 확인할 수 있는 인터페이스
          * */
+        doNothing().when(productService).registerProduct(productRequestDTO);
         ResultActions resultActions = mockMvc.perform(post("/product").contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(productRequestDTO)));
         //then
-        resultActions.andExpect(status().isBadRequest());
+        resultActions.andExpect(status().isBadRequest()).andExpect(jsonPath("$.statusCode").value("400")).andExpect(jsonPath("$.message").value("상품코드는 필수 값입니다."));
 
     }
 
     @Test
-    @DisplayName("상품등록 : 상품이름 미등록")
+    @DisplayName("상품이름에 null 이나 공백이 들어가면 등록에 실패한다.")
     void productNotName() throws Exception {
         //given
         ProductRequestDTO productRequestDTO = ProductRequestDTO.builder().productCode("1234").productName("").productPrice(119000).productComment("이 상품은 운동화입니다.").build();
         //when
+        doNothing().when(productService).registerProduct(productRequestDTO);
         ResultActions resultActions = mockMvc.perform(post("/product").contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(productRequestDTO)));
         //then
-        resultActions.andExpect(status().isBadRequest());
+        resultActions.andExpect(status().isBadRequest()).andExpect(jsonPath("$.statusCode").value("400")).andExpect(jsonPath("$.message").value("상품이름은 필수 입력 값입니다."));
 
     }
 
     @Test
-    @DisplayName("상품등록 : 상품가격 0등록")
+    @DisplayName("상품가격에 공백 이나 0이 들어가면 등록에 실패한다.")
     void productNotPrice() throws Exception {
         //given
         ProductRequestDTO productRequestDTO = ProductRequestDTO.builder().productCode("1234").productName("나이키덩크").productPrice(0).productComment("이 상품은 운동화입니다.").build();
         //when
+        doNothing().when(productService).registerProduct(productRequestDTO);
         ResultActions resultActions = mockMvc.perform(post("/product").contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(productRequestDTO)));
         //then
-        resultActions.andExpect(status().isBadRequest());
+        resultActions.andExpect(status().isBadRequest()).andExpect(jsonPath("$.statusCode").value("400")).andExpect(jsonPath("$.message").value("상품 가격은 0이상의 값만 입력 가능합니다."));
 
     }
 
     @Test
-    @DisplayName("상품등록 : 상품설명 미등록")
+    @DisplayName("상품설명에 null 이나 공백이 들어가면 등록에 실패한다.")
     void productNotComment() throws Exception {
         //given
         ProductRequestDTO productRequestDTO = ProductRequestDTO.builder().productCode("1234").productName("나이키덩크").productPrice(119000).productComment("").build();
         //when
+        doNothing().when(productService).registerProduct(productRequestDTO);
         ResultActions resultActions = mockMvc.perform(post("/product").contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(productRequestDTO)));
         //then
-        resultActions.andExpect(status().isBadRequest());
+        resultActions.andExpect(status().isBadRequest()).andExpect(jsonPath("$.statusCode").value("400")).andExpect(jsonPath("$.message").value("상품설명은 필수 입력 값입니다."));
 
     }
 
