@@ -24,10 +24,9 @@ public class ProductService {
             log.error("duplicate failed");
             throw new CommonCustomException(ErrorCode.PRODUCT_DUPLICATED);
         }
-        try {
-            ProductDAO product = ProductDAO.builder().productCode(productRequestDTO.getProductCode()).productName(productRequestDTO.getProductName()).productPrice(productRequestDTO.getProductPrice()).productComment(productRequestDTO.getProductComment()).build();
-            productMapper.registerProduct(product);
-        } catch (Exception e) {
+        ProductDAO product = ProductDAO.builder().productCode(productRequestDTO.getProductCode()).productName(productRequestDTO.getProductName()).productPrice(productRequestDTO.getProductPrice()).productComment(productRequestDTO.getProductComment()).build();
+        int getResult = productMapper.registerProduct(product);
+        if (getResult == 0) {
             log.error("processing failed");
             throw new CommonCustomException(ErrorCode.NOT_REGISTER);
         }
